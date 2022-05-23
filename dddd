@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <title>Masonry tests</title>
+
+  <link rel="stylesheet" href="tests.css" /> 
+<style>
+   .masonry-item {
+      background: #FFA500;
+      float: left;
+      margin: 5px;
+      padding: 5px;
+      width: 130px;
+   }
+   .placeholder {
+      background: #0BB5FF;
+   }
+   
+* { box-sizing: border-box; }
+
+
+.grid:after {
+
+content: ' ';
+
+display: block;
+
+clear: both;
+
+}
+
+
+/* ---- grid-item ---- */
+
+
+.grid-item {
+
+ width: 320px;
+
+  height: 320px;
+
+ float: left;
+
+ border: 2px solid #333;
+
+ border-radius: 5px;
+
+ overflow:hidden
+
+}
+
+
+.grid-item--height2 { height: 460px; }
+
+.grid-item--height3 { height: 520px; }
+
+
+Img{
+
+height: 100%
+
+}
+</style>  
+<!-- tests --> 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://masonry.desandro.com/masonry.pkgd.js"></script>
+
+</head>
+<body>
+<script type='text/javascript'>
+ 
+var InURLArray=[];
+var LoadedURLArray=[];
+var lastLoadDate;
+
+
+ 
+ 
+ $('.grid').masonry({
+     // options
+     itemSelector: '.grid-item',
+     columnWidth: 200
+ }); 
+ 
+	function LoadPage()
+	{
+		var url = "Home/UpdateLastAccessedOn";
+		if (InURLArray.length === 0)
+		{
+		
+//		$.ajax({
+//			type: "GET",
+//			url: "http://localhost:8081/masonry-master/test/index3.html",
+//			data: "",
+//			contentType: "application/json; charset=utf-8",
+//			traditional: true,
+//			dataType: "json",
+//			success: function (response) {
+//				var mediaItemContainer = $( '.grid' ); 
+//				$( mediaItemContainer ).append( '<div class="grid-item">DOWNLOAD WEWEHIHIHIHIHIHIHI<img src="https://ap-east-1-02850030-view.menlosecurity.com/c/0/i/aHR0cHM6Ly93d3cuYXN0cmFsd2ViLmNvbS50dy93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8xMC9uZXctbG9nby1pbWFnZS5wbmc~" alt=""></div>' );
+//			},
+//			error: function (response, status, error) {		
+		//	}
+		//});
+			InURLArray.push("http://localhost:8081/masonry-master/test/index3.html");
+			InURLArray.push("http://localhost:8081/masonry-master/test/index3.html");
+			InURLArray.push("http://localhost:8081/masonry-master/test/index3.html");
+			
+		}
+		
+		
+		$.get('http://localhost:8081/masonry-master/test/index.html', function(data) {
+				var mediaItemContainer = $( '.grid' ); 
+				$( mediaItemContainer ).append( '<div class="grid-item">' + data + 'DOWNLOAD WEWEHIHIHIHIHIHIHI<img src="https://ap-east-1-02850030-view.menlosecurity.com/c/0/i/aHR0cHM6Ly93d3cuYXN0cmFsd2ViLmNvbS50dy93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8xMC9uZXctbG9nby1pbWFnZS5wbmc~" alt=""></div>' );
+			//$('#siteloader').html(data);
+		});
+	
+	}
+ 
+	function DetectByTimeout() {
+		 if($(window).scrollTop() + $(window).height() >= $(document).height()- 20) {
+			   LoadPage();
+			   LoadPage();
+			   LoadPage();
+		 }else{
+
+		 }
+	}
+ 
+    $(function(){
+
+     $container = $('#grid');
+      $container.masonry({
+         itemSelector : '.grid-item',
+         isAnimated: true
+      });
+	  
+      //dynamically add Masonry items to the page
+      $('#add-html').click(function(){
+		LoadPage();
+      });
+	  
+     var $win = $(window);
+
+	 $win.scroll(function () {
+		 if ($win.scrollTop() == 0) {
+			 //alert('Scrolled to Page Top');
+		 }else{
+			timeout = setTimeout(DetectByTimeout, 1000);
+
+		 }
+	 });
+   });
+   
+   $(document).scroll(function(){ 
+		if ((window.innerHeight + window.scrollY) == $(document).height()) {
+			alert('Done');
+		}
+   });
+</script>
+<div class="grid">
+
+   <button id="add-html">Add HTML</button>
+<div class="grid-item">
+
+    <img src="https://ap-east-1-02850030-view.menlosecurity.com/c/0/i/aHR0cHM6Ly93d3cuYXN0cmFsd2ViLmNvbS50dy93cC1jb250ZW50L3VwbG9hZHMvMjAyMS8xMC9uZXctbG9nby1pbWFnZS5wbmc~" alt="">
+
+   </div>
+</div>
+
+
+</body>
+</html>
