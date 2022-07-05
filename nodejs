@@ -1,0 +1,295 @@
+__filename
+
+
+var fs = require("fs");
+
+var data = fs.readFileSync('input.txt');
+
+
+console.log(data.toString());
+console.log("程序执行结束!");
+
+var fs = require("fs");
+
+fs.readFile('input.txt', function (err, data) {
+    if (err) return console.error(err);
+    console.log(data.toString());
+});
+
+
+// 引入 events 模块
+var events = require('events');
+// 创建 eventEmitter 对象
+var eventEmitter = new events.EventEmitter();
+
+// 绑定事件及事件的处理程序
+eventEmitter.on('eventName', eventHandler);
+
+// 触发事件
+eventEmitter.emit('eventName');
+
+--------------------
+
+
+// 引入 events 模块
+var events = require('events');
+// 创建 eventEmitter 对象
+var eventEmitter = new events.EventEmitter();
+ 
+// 创建事件处理程序
+var connectHandler = function connected() {
+   console.log('连接成功。');
+  
+   // 触发 data_received 事件 
+   eventEmitter.emit('data_received');
+}
+ 
+// 绑定 connection 事件处理程序
+eventEmitter.on('connection', connectHandler);
+ 
+// 使用匿名函数绑定 data_received 事件
+eventEmitter.on('data_received', function(){
+   console.log('数据接收成功。');
+});
+ 
+// 触发 connection 事件 
+eventEmitter.emit('connection');
+ 
+console.log("程序执行完毕。");
+
+
+
+
+--------------------
+
+var EventEmitter = require('events').EventEmitter; 
+var event = new EventEmitter(); 
+event.on('some_event', function() { 
+    console.log('some_event 事件触发'); 
+}); 
+setTimeout(function() { 
+    event.emit('some_event'); 
+}, 1000); 
+
+
+--------------------
+//event.js 文件
+var events = require('events'); 
+var emitter = new events.EventEmitter(); 
+emitter.on('someEvent', function(arg1, arg2) { 
+    console.log('listener1', arg1, arg2); 
+}); 
+emitter.on('someEvent', function(arg1, arg2) { 
+    console.log('listener2', arg1, arg2); 
+}); 
+emitter.emit('someEvent', 'arg1 参数', 'arg2 参数'); 
+
+
+
+--------------------
+events.emitter.listenerCount(eventName) //推荐
+
+
+
+--------------------
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+
+// 监听器 #1
+var listener1 = function listener1() {
+   console.log('监听器 listener1 执行。');
+}
+
+// 监听器 #2
+var listener2 = function listener2() {
+  console.log('监听器 listener2 执行。');
+}
+
+// 绑定 connection 事件，处理函数为 listener1 
+eventEmitter.addListener('connection', listener1);
+
+
+// 绑定 connection 事件，处理函数为 listener2
+eventEmitter.on('connection', listener2);
+
+var eventListeners = eventEmitter.listenerCount('connection');
+console.log(eventListeners + " 个监听器监听连接事件。");
+
+// 处理 connection 事件 
+eventEmitter.emit('connection');
+
+// 移除监绑定的 listener1 函数
+eventEmitter.removeListener('connection', listener1);
+console.log("listener1 不再受监听。");
+
+// 触发连接事件
+eventEmitter.emit('connection');
+
+eventListeners = eventEmitter.listenerCount('connection');
+console.log(eventListeners + " 个监听器监听连接事件。");
+
+console.log("程序执行完毕。");
+以上代码，执行结果如下所示：
+
+$ node main.js
+2 个监听器监听连接事件。
+监听器 listener1 执行。
+监听器 listener2 执行。
+listener1 不再受监听。
+监听器 listener2 执行。
+1 个监听器监听连接事件。
+程序执行完毕。
+
+--------------------
+
+const buff = Buffer.from('run', 'ascii');
+
+const buf = Buffer.from('runoob', 'ascii');
+
+// 输出 72756e6f6f62
+console.log(buf.toString('hex'));
+
+// 输出 cnVub29i
+console.log(buf.toString('base64'));
+
+// 创建一个长度为 10、且用 0 填充的 Buffer。
+const buf1 = Buffer.alloc(10);
+
+// 创建一个长度为 10、且用 0x1 填充的 Buffer。 
+const buf2 = Buffer.alloc(10, 1);
+
+// 创建一个长度为 10、且未初始化的 Buffer。
+// 这个方法比调用 Buffer.alloc() 更快，
+// 但返回的 Buffer 范例可能包含旧数据，
+// 因此需要使用 fill() 或 write() 重写。
+const buf3 = Buffer.allocUnsafe(10);
+
+// 创建一个包含 [0x1, 0x2, 0x3] 的 Buffer。
+const buf4 = Buffer.from([1, 2, 3]);
+
+// 创建一个包含 UTF-8 字节 [0x74, 0xc3, 0xa9, 0x73, 0x74] 的 Buffer。
+const buf5 = Buffer.from('tést');
+
+// 创建一个包含 Latin-1 字节 [0x74, 0xe9, 0x73, 0x74] 的 Buffer。
+const buf6 = Buffer.from('tést', 'latin1');
+
+--------------------------------
+buf = Buffer.alloc(256);
+len = buf.write("www.runoob.com");
+
+console.log("写入字节数 : "+  len);
+
+
+Readable
+writeable
+Duplex
+Transform
+data
+end
+error
+finish
+
+
+---------------------------------------
+var fs = require("fs");
+var data = '';
+
+// 创建可读流
+var readerStream = fs.createReadStream('input.txt');
+
+// 设置编码为 utf8。
+readerStream.setEncoding('UTF8');
+
+// 处理流事件 --> data, end, and error
+readerStream.on('data', function(chunk) {
+   data += chunk;
+});
+
+readerStream.on('end',function(){
+   console.log(data);
+});
+
+readerStream.on('error', function(err){
+   console.log(err.stack);
+});
+
+console.log("程序执行完毕");
+
+---------------------------------------
+
+var fs = require("fs");
+var data = '编程宝库官网地址：www.codebaoku.com';
+
+// 创建一个可以写入的流，写入到文件 output.txt 中
+var writerStream = fs.createWriteStream('output.txt');
+
+// 使用 utf8 编码写入数据
+writerStream.write(data,'UTF8');
+
+// 标记文件末尾
+writerStream.end();
+
+// 处理流事件 --> finish、error
+writerStream.on('finish', function() {
+    console.log("写入完成。");
+});
+
+writerStream.on('error', function(err){
+   console.log(err.stack);
+});
+
+console.log("程序执行完毕");
+
+
+-------------------------------------------------
+
+var fs = require("fs");
+
+// 创建一个可读流
+var readerStream = fs.createReadStream('input.txt');
+
+// 创建一个可写流
+var writerStream = fs.createWriteStream('output.txt');
+
+// 管道读写操作
+// 读取 input.txt 文件内容，并将内容写入到 output.txt 文件中
+readerStream.pipe(writerStream);
+
+console.log("程序执行完毕");
+
+----------------------------------------------------
+
+var fs = require("fs");
+var zlib = require('zlib');
+
+// 压缩 input.txt 文件为 input.txt.gz
+fs.createReadStream('input.txt')
+  .pipe(zlib.createGzip())
+  .pipe(fs.createWriteStream('input.txt.gz'));
+  
+console.log("文件压缩完成。");
+
+var fs = require("fs");
+var zlib = require("zlib");
+
+fs.createReadStream('')
+	.pipe(zlib.createGzip())
+	.pipe(fs.createWriteStream('input.txt.gz'));
+	
+	
+
+
+----------------------------------------------------
+
+
+
+
+
+
+
+
+
+
