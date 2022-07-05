@@ -1,0 +1,207 @@
+redis 127.0.0.1:6379> MULTI
+
+
+redis 127.0.0.1:6379> SET greeting "hello"
+
+
+
+$redis = new Redis([
+    'host' => '127.0.0.1',
+    'port' => 6379,
+    'connectTimeout' => 2.5,
+    'auth' => ['phpredis', 'phpredis'],
+    'ssl' => ['verify_peer' => false],
+    'backoff' => [
+        'algorithm' => Redis::BACKOFF_ALGORITHM_DECORRELATED_JITTER,
+        'base' => 500,
+        'cap' => 750,
+    ],
+]);
+
+
+$redis->pconnect('127.0.0.1', 6379);
+$redis->pconnect('127.0.0.1'); // port 6379 by default - same connection like before.
+$redis->pconnect('tls://127.0.0.1', 6379); // enable transport level security.
+$redis->pconnect('tls://127.0.0.1'); // enable transport level security, port 6379 by default.
+$redis->pconnect('127.0.0.1', 6379, 2.5); // 2.5 sec timeout and would be another connection than the two before.
+$redis->pconnect('127.0.0.1', 6379, 2.5, 'x'); // x is sent as persistent_id and would be another connection than the three before.
+$redis->pconnect('/tmp/redis.sock'); // unix domain socket - would be another connection than the four before.
+
+
+$redis->config("GET", "*max-*-entries*");
+$redis->config("SET", "dir", "/var/run/redis/dumps/");
+
+
+
+$count = $redis->dbSize();
+echo "Redis has $count keys\n";
+
+
+
+$redis->flushDb();
+
+$redis->slaveOf('10.0.1.7', 6379);
+/* ... */
+$redis->slaveOf();
+
+
+
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
+
+class UserController extends Controller
+{
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return view('user.profile', [
+            'user' => Redis::get('user:profile:'.$id)
+        ]);
+    }
+}
+
+------------------------------------
+use Illuminate\Support\Facades\Redis;
+
+Redis::set('name', 'Taylor');
+
+$values = Redis::lrange('names', 5, 10);
+
+$values = Redis::command('lrange', ['name', 5, 10]);
+
+$redis = Redis::connection('connection-name');
+
+Redis::get('
+
+------------------------------------
+
+use Illuminate\Support\Facades\Redis;
+
+Redis::transaction(function ($redis) {
+    $redis->incr('user_visits', 1);
+    $redis->incr('total_visits', 1);
+});
+
+------------------------------------
+
+use Illuminate\Support\Facades\Redis;
+
+Redis::pipeline(function ($pipe) {
+    for ($i = 0; $i < 1000; $i++) {
+        $pipe->set("key:$i", $i);
+    }
+});
+
+
+
+
+----------------------------
+redis 127.0.0.1:6379> set codebaoku-key ok
+OK
+redis 127.0.0.1:6379> EXISTS codebaoku-key
+
+get codebaoku-key
+
+del codebaoku-key
+
+ LPUSH db redis mongodb mysql
+ 
+ -----------------
+ SET key1 "hello"
+  SET key2 "world"
+  MGET key1 key2 someOtherKey
+  
+ ----------------- 
+MSET key1 "Hello" key2 "World"
+
+----------------- 
+SET count-test 20
+INCR count-test
+
+GET count-test
+----------------- 
+
+SET count-test 20
+DECR count-test
+GET count-test
+----------------- 
+
+APPEND myapp "codebaoku"
+
+
+
+HSET myhash field1 "foo"
+HDEL myhash field1
+
+HSET myhash field1 "foo"
+HEXISTS myhash field1
+
+
+
+HSET site redis redis.com
+HGET site redis
+
+HSET site redis redis.com
+
+
+HSET myhash field2 "bar"
+HSET myhash field1 "foo"
+HLEN myhash
+
+---------
+LPUSH list1 "foo"
+LPUSH list1 "bar"
+LRANGE list1 0 -1
+
+
+---------
+RPUSH list1 "foo"
+RPUSH list1 "bar"
+LPOP list1
+
+
+LLEN list1
+
+
+-----------------
+SADD myset "hello"
+SADD myset "hello2"
+SADD myset "hell3"
+SADD myset "hello"
+
+
+-----------------
+
+SPOP myset
+SPOP myset
+
+---------------------
+redis 127.0.0.1:6379> ZADD myzset 1 "one"
+(integer) 1
+redis 127.0.0.1:6379> ZADD myzset 1 "uno"
+(integer) 1
+redis 127.0.0.1:6379> ZADD myzset 2 "two" 3 "three"
+(integer) 2
+redis 127.0.0.1:6379> ZRANGE myzset 0 -1 WITHSCORES
+
+
+
+
+redis 127.0.0.1:6379> ZRANGE salary 0 -1 WITHSCORES        # 显示所有成员及其 score 值
+1) "peter"
+2) "3500"
+3) "tom"
+4) "4000"
+5) "jack"
+6) "5000"
+
+redis 127.0.0.1:6379> ZRANK salary tom                     # 显示 tom 的薪水排名，第二
+(integer) 1
